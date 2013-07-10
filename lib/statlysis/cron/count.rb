@@ -26,7 +26,7 @@ module Statlysis
         cron.stat_table.where("t >= ? AND t <= ?", cron.output[0][:t], cron.output[-1][:t]).delete
         while !(_a = @output[@num_i..(@num_i+@num_add)]).blank? do
           # batch insert all
-          cron.stat_table.insert_multiple _a
+          cron.stat_table.multi_insert _a
           @num_i += (@num_add + 1)
         end
       end
