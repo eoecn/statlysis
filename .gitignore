@@ -49,3 +49,4 @@ tmtags
 *.rbc
 
 coverage
+*.gem
