@@ -5,7 +5,7 @@ statistical analysis in ruby dsl
 Usage
 -----------------------------------------------
 ```ruby
-module Statlysis
+Statlysis.setup do
   set_database :statlysis
   update_time_columns :t
   set_tablename_default_pre :st
@@ -27,6 +27,7 @@ module Statlysis
   [:www, :code, :skill, :book, :edu, :news, :wiki, :salon, :android].each do |site|
     daily  @log_model.where(:do => DOMAINS_HASH[site]), :t
   end
+end
 ```
 
 TODO
@@ -36,6 +37,7 @@ TODO
 3. Interacting with Javascript charting library, e.g. Highcharts, D3.
 4. Add namespace to DSL, like rake
 5. More tests
+6. support collections which splited by date
 
 
 Copyright
