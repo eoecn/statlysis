@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.authors       = ["David Chen"]
   s.email         = 'mvjome@gmail.com'
   s.homepage      = 'https://github.com/eoecn/statlysis'
+  s.license       = 'MIT'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- test/{functional,unit}/*`.split("\n")
