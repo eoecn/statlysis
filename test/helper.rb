@@ -15,6 +15,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'statlysis'
 
 def Rails.root; Pathname.new(File.expand_path('../.', __FILE__)) end
+require 'sqlite3'
 
 Statlysis.set_database :statlysis
 

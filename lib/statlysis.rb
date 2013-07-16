@@ -5,13 +5,12 @@
 # 删除匹配的统计表
 # Statlysis.sequel.tables.select {|i| i.to_s.match(//i) }.each {|i| Statlysis.sequel.drop_table i }
 
-# TODO http://api.rubyonrails.org/classes/ActiveSupport/Callbacks.html # # self.check_set_database
 # TODO Statlysis.sequel.tables.map {|t| eval "class ::#{t.to_s.camelize} < ActiveRecord::Base; self.establish_connection Statlysis.database_opts; self.table_name = :#{t}; end; #{t.to_s.camelize}" }
 
 require "active_support/all"
 require 'active_support/core_ext/module/attribute_accessors.rb'
 require 'active_record'
-%w[yaml sequel only_one_rake mongoid sqlite3].map(&method(:require))
+%w[yaml sequel only_one_rake mongoid].map(&method(:require))
 
 # Fake a Rails environment
 module Rails;end
