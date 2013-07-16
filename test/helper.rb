@@ -13,9 +13,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'statlysis'
 
-def Rails.root; Pathname.new(ENV['RAILS_ROOT'] || "#{Dir.pwd}/../..") end
-raise "Please setup RAILS_ROOT shell env first!" if not File.exists?(Rails.root.join("config/database.yml"))
-
+def Rails.root; Pathname.new(File.expand_path('../.', __FILE__)) end
 Statlysis.set_database :statlysis
 
 class Test::Unit::TestCase
