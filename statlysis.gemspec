@@ -21,11 +21,14 @@ Gem::Specification.new do |s|
   s.add_dependency "rake"
   s.add_dependency "rails"
   s.add_dependency "mysql2"
-  s.add_dependency "mongoid"
+  s.add_dependency "mongoid", "~> 3.0.0"
   s.add_dependency "activerecord"
   s.add_dependency "activerecord_idnamecache"
   s.add_dependency "activesupport"
   s.add_dependency "sequel"
   s.add_dependency 'only_one_rake'
+  s.add_dependency 'bson_ext'
+  s.add_development_dependency 'sqlite3'
+  s.add_development_dependency 'pry-debugger'
 
 end

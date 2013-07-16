@@ -2,7 +2,8 @@
 
 require 'helper'
 
-Mongoid.connect_to "mongoid-mapreduce-test"
+Mongoid.load!(File.expand_path("../config/mongoid.yml", __FILE__), :production)
+
 Dir["#{File.dirname(__FILE__)}/models/*.rb"].each { |f| require f }
 Mongoid.default_session.collections.select {|c| c.name !~ /system/ }.each(&:drop)
 

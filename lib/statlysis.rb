@@ -1,14 +1,20 @@
 # encoding: UTF-8
+#
 # Sequel的操作均需通过Symbol
 #
 # 删除匹配的统计表
 # Statlysis.sequel.tables.select {|i| i.to_s.match(//i) }.each {|i| Statlysis.sequel.drop_table i }
 
+# TODO http://api.rubyonrails.org/classes/ActiveSupport/Callbacks.html # # self.check_set_database
+# TODO Statlysis.sequel.tables.map {|t| eval "class ::#{t.to_s.camelize} < ActiveRecord::Base; self.establish_connection Statlysis.database_opts; self.table_name = :#{t}; end; #{t.to_s.camelize}" }
+
 require "active_support/all"
 require 'active_support/core_ext/module/attribute_accessors.rb'
 require 'active_record'
-require 'rails'
-%w[yaml sequel only_one_rake mongoid].map(&method(:require))
+%w[yaml sequel only_one_rake mongoid sqlite3].map(&method(:require))
+
+# Fake a Rails environment
+module Rails;end
 
 module Statlysis
   Units = %w[hour day week month year]
@@ -85,10 +91,7 @@ module Statlysis
       else
         raise "Statlysis#set_database only support symbol or hash params"
       end
-      self.sequel = Sequel.connect self.database_opts.except('database')
-      self.sequel.execute("CREATE DATABASE IF NOT EXISTS #{self.database_opts['database']} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;")
-      self.sequel.use self.database_opts['database']
-      # Statlysis.sequel.tables.map {|t| eval "class ::#{t.to_s.camelize} < ActiveRecord::Base; self.establish_connection Statlysis.database_opts; self.table_name = :#{t}; end; #{t.to_s.camelize}" }
+      self.sequel = Sequel.connect self.database_opts
     end
 
     def set_tablename_default_pre str
@@ -148,10 +151,11 @@ module Statlysis
 end
 
 
+# load rake tasks
 module Statlysis
   class Railtie < Rails::Railtie
     rake_tasks do
       load File.expand_path('../statlysis/rake.rb', __FILE__)
     end
-  end if defined? Rails
-end
+  end
+end if defined? Rails::Railtie

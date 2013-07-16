@@ -6,4 +6,4 @@ production: &defaults
   database: ":memory:"
 statlysis:
   <<: *defaults
-  database: statlysis
+#  database: statlysis
