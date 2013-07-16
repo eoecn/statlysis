@@ -46,7 +46,7 @@ module Statlysis
       self.check_set_database
       opts.reverse_merge! :time_column => :created_at, :time_unit => :day
       t = Timely.new source, opts
-      module_eval("self.#{opts[:time_unit]}_crons").push t
+      self.send("#{opts[:time_unit]}_crons").push t
     end
 
     # the real requirement is to compute lastest items group by special pattens, like user_id, url prefix, ...
