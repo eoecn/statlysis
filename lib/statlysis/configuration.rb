@@ -1,6 +1,7 @@
 # encoding: UTF-8
-
+#
 # see original implement at http://mvj3.github.io/2013/04/17/statlysis-analysis-design-solve-two-problems-lazy-loading-and-scope/
+#
 
 require 'singleton'
 

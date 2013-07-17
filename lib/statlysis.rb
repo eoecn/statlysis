@@ -10,7 +10,7 @@
 require "active_support/all"
 require 'active_support/core_ext/module/attribute_accessors.rb'
 require 'active_record'
-%w[yaml sequel only_one_rake mongoid].map(&method(:require))
+%w[yaml sequel mongoid].map(&method(:require))
 
 # Fake a Rails environment
 module Rails;end

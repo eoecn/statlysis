@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 require 'rake'
+require 'only_one_rake'
 
 namespace :statlysis do
   Statlysis::Units.each do |unit|
