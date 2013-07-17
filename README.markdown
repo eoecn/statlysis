@@ -55,3 +55,8 @@ A: When initialize an ORM object, ActiveRecord is 3 times slower than Sequel, an
 Copyright
 -----------------------------------------------
 MIT. David Chen at eoe.cn.
+
+
+Related
+-----------------------------------------------
+https://github.com/clbustos/statsample/  A suite for basic and advanced statistics on Ruby. 
