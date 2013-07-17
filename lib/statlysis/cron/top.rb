@@ -80,7 +80,7 @@ module Statlysis
     end
 
     def write
-      puts "#{Time.now.strftime('%H:%M:%S')} #{cron.stat_model} #{cron.output.inspect}"
+      logger.info "#{Time.now.strftime('%H:%M:%S')} #{cron.stat_model} #{cron.output.inspect}"
       cron.output.each do |pattern, user_ids|
         s = cron.stat_model.find_or_create(:pattern => pattern)
         old_array = (JSON.parse(s.result) rescue []).map {|i| Array(i)[0] }

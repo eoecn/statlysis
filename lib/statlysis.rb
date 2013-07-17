@@ -23,19 +23,19 @@ module Statlysis
     def setup &blk
       raise "Need to setup proc" if not blk
 
-      puts "Start to setup Statlysis"
+      logger.info "Start to setup Statlysis"
       time_log do
         self.config.instance_exec(&blk)
       end
-      puts
+      logger.info
     end
 
     def time_log text = nil
       t = Time.now
-      puts text if text
+      logger.info text if text
       yield if block_given?
-      puts "Time spend #{(Time.now - t).round(2)} seconds."
-      puts "-" * 42
+      logger.info "Time spend #{(Time.now - t).round(2)} seconds."
+      logger.info "-" * 42
     end
 
     # delagate config methods to Configuration
@@ -46,21 +46,23 @@ module Statlysis
     ].each do |sym|
       delegate sym, :to => :config
     end
-  end
 
-  def self.setup_stat_table_and_model cron, tablename = nil
-    tablename = cron.stat_table_name if tablename.nil?
-    tablename ||= cron.stat_table.first_source_table
-    cron.stat_table = Statlysis.sequel[tablename.to_sym]
+    def setup_stat_table_and_model cron, tablename = nil
+      tablename = cron.stat_table_name if tablename.nil?
+      tablename ||= cron.stat_table.first_source_table
+      cron.stat_table = Statlysis.sequel[tablename.to_sym]
 
-    str = tablename.to_s.singularize.camelize
-    eval("class ::#{str} < Sequel::Model;
-      self.set_dataset :#{tablename}
-      def self.[] item_id
-        JSON.parse(find_or_create(:pattern => item_id).result) rescue []
-      end
-    end; ")
-    cron.stat_model = str.constantize
+      str = tablename.to_s.singularize.camelize
+      eval("class ::#{str} < Sequel::Model;
+        self.set_dataset :#{tablename}
+        def self.[] item_id
+          JSON.parse(find_or_create(:pattern => item_id).result) rescue []
+        end
+      end; ")
+      cron.stat_model = str.constantize
+    end
+
+    delegate :logger, :to => $stdout
   end
 
 end

@@ -15,11 +15,11 @@ module Statlysis
       cron.source          = cron.source.order("#{cron.time_column} ASC") if is_mysql?
       cron.source          = cron.source.asc(cron.time_column) if is_mongodb?
 
-      (puts("#{cron.source_name} have no result!"); return false) if cron.output.blank?
+      (logger.info("#{cron.source_name} have no result!"); return false) if cron.output.blank?
       # delete first in range
       @output = cron.output
       unless @output.any?
-        puts "没有数据"; return
+        logger.info "没有数据"; return
       end
       @num_i = 0; @num_add = 999
       Statlysis.sequel.transaction do
@@ -77,7 +77,7 @@ module Statlysis
         _t = is_time_column_integer? ? _t.to_i : _t
         totally_c = cron.source.where(unit_range_query(time, _t)).count
 
-        puts "#{time.in_time_zone} #{cron.source_name} timely_c:#{timely_c} totally_c:#{totally_c}"
+        logger.info "#{time.in_time_zone} #{cron.source_name} timely_c:#{timely_c} totally_c:#{totally_c}"
         if timely_c.zero? && totally_c.zero?
           nil
         else

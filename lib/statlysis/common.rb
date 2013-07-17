@@ -2,7 +2,12 @@
 
 module Statlysis
   module Common
-    attr_accessor :stat_table_name, :stat_model, :stat_table
+    extend ActiveSupport::Concern
+
+    self.included do
+      attr_accessor :stat_table_name, :stat_model, :stat_table
+    end
+
     def pattern_table_and_model tn
       # ensure statlysis table
       tn = tn.pluralize
@@ -20,8 +25,7 @@ module Statlysis
     end
 
     def cron; self end
-    # TODO remove puts, conflict user, user logger
-    def puts(*strs); $stdout.puts(*strs) if ENV['DEBUG'] end
+    delegate :logger, :to => $stdout
 
   end
 end

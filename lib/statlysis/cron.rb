@@ -33,7 +33,7 @@ module Statlysis
         equality.is_a?(String) ? equality.to_sym : "#{equality.operand1.name}#{equality.operand2}"
       end if is_mysql?
       a = cron.source.all.selector.reject {|k, v| k == 't' } if is_mongodb?
-      a.map {|s| s.to_s.split(//).select {|s| s.match(/[a-z0-9]/i) }.join }.sort.map(&:to_sym)
+      a.map {|s1| s1.to_s.split(//).select {|s2| s2.match(/[a-z0-9]/i) }.join }.sort.map(&:to_sym)
     end
 
     def source_name
@@ -58,7 +58,7 @@ module Statlysis
       timebegin = (st_timebegin > timebegin) ? st_timebegin : timebegin if st_timebegin
 
       timeend = DateTime.now
-      puts "#{cron.source_name}'s range #{timebegin..timeend}"
+      logger.info "#{cron.source_name}'s range #{timebegin..timeend}"
       # 把统计表的最后时间点也包含进去重新计算下
       TimeSeries.parse(timebegin..timeend, :unit => cron.time_unit)
     end

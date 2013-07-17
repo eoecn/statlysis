@@ -35,7 +35,6 @@ TODO
 1. Admin interface
 2. statistical query api in Ruby and HTTP
 3. Interacting with Javascript charting library, e.g. Highcharts, D3.
-4. Add namespace to DSL, like rake
 5. More tests
 6. support collections which splited by date
 
