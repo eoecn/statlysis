@@ -21,6 +21,7 @@ Statlysis.setup do
   daily  @log_model, :t
   daily  @log_model.where(:ui => 0), :t
   daily  @log_model.where(:ui => {"$ne" => 0}), :t
+  daily  Mongoid[/eoe_logs_[0-9]+$/].where(:ui => {"$ne" => 0}), :t
 
   # 统计各个模块
   daily  @log_model.where(:do => {"$in" => [DOMAINS_HASH[:blog], DOMAINS_HASH[:my]]}), :t

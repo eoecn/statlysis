@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency "sequel"
   s.add_dependency 'only_one_rake'
   s.add_dependency 'bson_ext'
+  s.add_dependency 'origin'
 
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'pry-debugger'
