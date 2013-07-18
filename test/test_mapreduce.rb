@@ -1,16 +1,9 @@
 # encoding: UTF-8
 
 require 'helper'
-
-require 'mongoid'
-Mongoid.load!(File.expand_path("../config/mongoid.yml", __FILE__), :production)
-
-Dir[File.expand_path("../models/*.rb", __FILE__).to_s].each { |f| require f }
-Mongoid.default_session.collections.select {|c| c.name !~ /system/ }.each(&:drop)
+require 'mongoid_helper'
 
 class TestMapReduce < Test::Unit::TestCase
-  include Statlysis
-
   def setup
     # copied from git://github.com/joe1chen/mongoid-mapreduce.git
     @aapl = Company.create :name => 'Apple', :market => 'Technology', :quote => 401.82, :shares => 972_090_000
