@@ -25,7 +25,7 @@ module Statlysis
     end
 
     def cron; self end
-    delegate :logger, :to => $stdout
+    delegate :logger, :to => Statlysis
 
   end
 end

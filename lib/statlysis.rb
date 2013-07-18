@@ -62,7 +62,8 @@ module Statlysis
       cron.stat_model = str.constantize
     end
 
-    delegate :logger, :to => $stdout
+    attr_accessor :logger
+    Statlysis.logger ||= Logger.new($stdout)
   end
 
 end
