@@ -1,8 +1,6 @@
 # encoding: UTF-8
 
 module Statlysis
-  DateTime1970 = DateTime.parse("19700101").in_time_zone
-
   class Clock
     attr_accessor :clock
     include Common

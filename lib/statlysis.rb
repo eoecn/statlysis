@@ -10,15 +10,15 @@
 require "active_support/all"
 require 'active_support/core_ext/module/attribute_accessors.rb'
 require 'active_record'
+require 'activerecord_idnamecache'
 %w[yaml sequel mongoid].map(&method(:require))
 
 # Fake a Rails environment
-module Rails;end
+module Rails; end
+
+require 'statlysis/constants'
 
 module Statlysis
-  Units = %w[hour day week month year]
-  DefaultTableOpts = {:charset => "utf8", :collate => "utf8_general_ci", :engine => "MyISAM"}
-
   class << self
     def setup &blk
       raise "Need to setup proc" if not blk

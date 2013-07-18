@@ -60,3 +60,4 @@ MIT. David Chen at eoe.cn.
 Related
 -----------------------------------------------
 https://github.com/clbustos/statsample/  A suite for basic and advanced statistics on Ruby. 
+https://github.com/SciRuby/sciruby Tools for scientific computation in Ruby/Rails
