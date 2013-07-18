@@ -7,8 +7,6 @@ Usage
 ```ruby
 Statlysis.setup do
   set_database :statlysis
-  update_time_columns :t
-  set_tablename_default_pre :st
 
   # 初始化键值model
   Statlysis::Top.new('', :test => true).pattern_table_and_model 'st_single_kvs'
@@ -30,6 +28,10 @@ Statlysis.setup do
   end
 end
 ```
+
+Features
+-----------------------------------------------
+* Support time column that stored as integer.
 
 TODO
 -----------------------------------------------

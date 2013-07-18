@@ -4,13 +4,11 @@
 
 module Statlysis
   class MultipleDataset
-    attr_reader :adapter_type, :regexp
-    def initialize adapter_type, regexp
-      raise "adapter_type #{adapter_type} should be :mongoid or :active_record" if not [:mongoid, :active_record].include?(adapter_type)
+    attr_reader :regexp
+    def set_regexp regexp
       raise "regexp #{regexp} should be a Regexp!" if not regexp.is_a?(Regexp)
-
-      @adapter_type = adapter_type
       @regexp = regexp
+      return self
     end
   end
 end

@@ -9,10 +9,15 @@ require 'origin'
 module Statlysis
   class MongoidDataset < MultipleDataset
     include Origin::Queryable
+
+    # Acts as like a Mongoid
+    def included_modules
+      ["Mongoid::Document"]
+    end
   end
-end
 
+  def Mongoid.[] regexp
+    MongoidDataset.new.set_regexp(regexp)
+  end
 
-def Mongoid.[] regexp
-  MongoidDataset.new(:mongoid, regexp)
 end
