@@ -2,20 +2,21 @@
 
 module Statlysis
   class Cron
-    attr_accessor :source, :time_column, :time_unit
+    attr_reader :source, :time_column, :time_unit
     include Common
 
-    DefaultWrongMessage = "not implement yet, please config it by subclass".freeze
     def initialize source, opts = {}
-      cron.stat_table_name = opts[:stat_table_name] if opts[:stat_table_name]
-      cron.time_column     = opts[:time_column]
-      cron.source          = source
-      cron.time_unit       = opts[:time_unit]
+      @source          = source
+      @time_column     = opts[:time_column]
+      @time_unit       = opts[:time_unit]
+
+      @stat_table_name = opts[:stat_table_name] if opts[:stat_table_name]
+
       cron
     end
-    def output; raise DefaultWrongMessage end
-    def setup_stat_table; raise DefaultWrongMessage end
-    def run; raise DefaultWrongMessage end
+    def output; raise DefaultNotImplementWrongMessage end
+    def setup_stat_table; raise DefaultNotImplementWrongMessage end
+    def run; raise  DefaultNotImplementWrongMessage end
 
     # overwrite to lazy load @source
     def inspect

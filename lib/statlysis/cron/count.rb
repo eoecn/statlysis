@@ -21,13 +21,13 @@ module Statlysis
       unless @output.any?
         logger.info "没有数据"; return
       end
-      @num_i = 0; @num_add = 999
+      num_i = 0; num_add = 999
       Statlysis.sequel.transaction do
         cron.stat_table.where("t >= ? AND t <= ?", cron.output[0][:t], cron.output[-1][:t]).delete
-        while !(_a = @output[@num_i..(@num_i+@num_add)]).blank? do
+        while !(_a = @output[num_i..(num_i+num_add)]).blank? do
           # batch insert all
           cron.stat_table.multi_insert _a
-          @num_i += (@num_add + 1)
+          num_i += (num_add + 1)
         end
       end
     end

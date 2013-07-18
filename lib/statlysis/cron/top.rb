@@ -24,7 +24,7 @@ module Statlysis
       cron.write
     end
 
-    def write; raise DefaultWrongMessage end
+    def write; raise DefaultNotImplementWrongMessage end
 
 
     def self.ensure_statlysis_table_and_model tn

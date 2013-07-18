@@ -75,6 +75,7 @@ require 'statlysis/clock'
 require 'statlysis/rake'
 require 'statlysis/cron'
 require 'statlysis/similar'
+require 'statlysis/multiple_dataset'
 
 
 # load rake tasks
