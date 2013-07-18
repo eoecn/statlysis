@@ -26,7 +26,7 @@ end
 class TestSingleLogInMultipleCollections < Test::Unit::TestCase
   def setup
     Statlysis.setup do
-      daily Mongoid[/log_2013[0-9]{2}$/].where(:ui => {"$ne" => 0}), :t
+      daily Mongoid[/log_2013[0-9]{2}$/], :t
     end
   end
 
