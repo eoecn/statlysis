@@ -1,7 +1,6 @@
 # encoding: UTF-8
 
 require 'helper'
-require 'mongoid_helper'
 
 # setup a single log that combined by multiple collections
 (2..12).each do |num|
@@ -26,7 +25,7 @@ end
 class TestSingleLogInMultipleCollections < Test::Unit::TestCase
   def setup
     Statlysis.setup do
-      daily Mongoid[/log_2013[0-9]{2}$/], :t
+      # daily Mongoid[/log_2013[0-9]{2}$/], :t
     end
   end
 

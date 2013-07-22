@@ -52,6 +52,7 @@ Statlysis.daily[/name_regexp/] # => return matched daily configurations
 FAQ
 -----------------------------------------------
 Q: why use Sequel instead of ActiveRecord?
+
 A: When initialize an ORM object, ActiveRecord is 3 times slower than Sequel, and we just need the basic operations, including read, write, enumerate, etc. See more details in [Quick dive into Ruby ORM object initialization](http://merbist.com/2012/02/23/quick-dive-into-ruby-orm-object-initialization/) .
 
 

@@ -10,10 +10,14 @@ module Statlysis
   class MongoidDataset < MultipleDataset
     include Origin::Queryable
 
-    # Acts as like a Mongoid
-    def included_modules
-      ["Mongoid::Document"]
+    def set_regexp regexp
+      super
+
+      @sources = []
+
+      return self
     end
+
   end
 
   def Mongoid.[] regexp

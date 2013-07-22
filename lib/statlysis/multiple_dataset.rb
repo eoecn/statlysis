@@ -4,12 +4,29 @@
 
 module Statlysis
   class MultipleDataset
-    attr_reader :regexp
+    attr_reader :regexp, :sources, :name
     def set_regexp regexp
-      raise "regexp #{regexp} should be a Regexp!" if not regexp.is_a?(Regexp)
+      if regexp.is_a?(Regexp)
+      elsif regexp.is_a?(String)
+        regexp = Regexp.new(string)
+      else
+        raise "regexp #{regexp} should be a Regexp!" 
+      end
       @regexp = regexp
+
       return self
     end
+
+    def add_source s
+      @sources ||= Set.new
+      @sources.add s
+
+      _method_name = {:mongoid => :collection_name, :activerecord => :table_name}[Statlysis.source_to_database_type[s]]
+      # require 'pry-debugger'; binding.pry
+      @name = s.send(_method_name)
+      return self
+    end
+
   end
 end
 

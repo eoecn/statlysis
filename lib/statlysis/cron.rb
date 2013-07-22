@@ -2,47 +2,49 @@
 
 module Statlysis
   class Cron
-    attr_reader :source, :time_column, :time_unit
+    attr_reader :multiple_dataset, :time_column, :time_unit
     include Common
 
     def initialize source, opts = {}
-      @source          = source
-      @time_column     = opts[:time_column]
-      @time_unit       = opts[:time_unit]
+      # setup data type related
+      @is_activerecord = Utils.is_activerecord?(source)
+      @is_mongoid      = Utils.is_mongoid?(source)
+      Statlysis.source_to_database_type[source] = {:mongoid => @is_mongoid, :activerecord => @is_activerecord}.select {|k, v| v }.keys.first
+
+      # insert source as a dataset
+      @multiple_dataset = ActiveRecordDataset.new.add_source(source) if @is_activerecord
+      @multiple_dataset = MongoidDataset.new.add_source(source) if @is_mongoid
+
+      @time_column      = opts[:time_column]
+      @time_unit        = opts[:time_unit]
 
       @stat_table_name = opts[:stat_table_name] if opts[:stat_table_name]
 
       cron
     end
     def output; raise DefaultNotImplementWrongMessage end
+    def reoutput; @output = nil; output end
     def setup_stat_table; raise DefaultNotImplementWrongMessage end
     def run; raise  DefaultNotImplementWrongMessage end
 
     # overwrite to lazy load @source
+=begin
     def inspect
-      source_inspect = is_mysql? ? cron.source.to_sql : cron.source
-      str = "#<#{cron.class} @source=#{source_inspect} @stat_table_name=#{cron.stat_table_name} @time_column=#{cron.time_column} @stat_table=#{cron.stat_table}"
+      str = "#<#{cron.class} @multiple_dataset=#{multiple_dataset} @stat_table_name=#{cron.stat_table_name} @time_column=#{cron.time_column} @stat_table=#{cron.stat_table}"
       str << " @stat_model=#{cron.stat_model}" if cron.methods.index(:stat_model)
       str << ">"
       str
     end
+=end
 
     def source_where_array
       # TODO follow index seq
       a = cron.source.where("").where_values.map do |equality|
         # use full keyvalue index name
         equality.is_a?(String) ? equality.to_sym : "#{equality.operand1.name}#{equality.operand2}"
-      end if is_mysql?
-      a = cron.source.all.selector.reject {|k, v| k == 't' } if is_mongodb?
+      end if @is_activerecord
+      a = cron.source.all.selector.reject {|k, v| k == 't' } if @is_mongoid
       a.map {|s1| s1.to_s.split(//).select {|s2| s2.match(/[a-z0-9]/i) }.join }.sort.map(&:to_sym)
-    end
-
-    def source_name
-      @source_name ||= begin
-        m = :table_name if is_mysql?
-        m = :collection_name if is_mongodb?
-        cron.source.send(m)
-      end
     end
 
     # automode
@@ -59,19 +61,16 @@ module Statlysis
       timebegin = (st_timebegin > timebegin) ? st_timebegin : timebegin if st_timebegin
 
       timeend = DateTime.now
-      logger.info "#{cron.source_name}'s range #{timebegin..timeend}"
+      logger.info "#{multiple_dataset.name}'s range #{timebegin..timeend}"
       # 把统计表的最后时间点也包含进去重新计算下
       TimeSeries.parse(timebegin..timeend, :unit => cron.time_unit)
     end
 
     protected
-    def is_mysql?; @_is_mysql ||= modules.grep(/ActiveRecord::Store/).any? end
-    def is_mongodb?; @_is_mongodb ||= modules.grep(/Mongoid::Document/).any? end
-    def modules; @_modules ||= cron.source.included_modules.map(&:to_s) end
 
     # 兼容采用整数类型作时间字段
     def is_time_column_integer?
-      if is_mysql?
+      if @is_activerecord
         cron.source.columns_hash[cron.time_column.to_s].type == :integer
       else
         false

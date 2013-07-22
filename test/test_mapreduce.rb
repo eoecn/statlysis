@@ -1,7 +1,6 @@
 # encoding: UTF-8
 
 require 'helper'
-require 'mongoid_helper'
 
 class TestMapReduce < Test::Unit::TestCase
   def setup

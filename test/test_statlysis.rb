@@ -3,8 +3,6 @@
 require 'helper'
 
 class TestStatlysis < Test::Unit::TestCase
-  include Statlysis
-
   def setup
     @old_datetime = DateTime.parse("20130105")
   end

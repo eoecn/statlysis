@@ -64,10 +64,14 @@ module Statlysis
 
     attr_accessor :logger
     Statlysis.logger ||= Logger.new($stdout)
+
+    def source_to_database_type; @_source_to_database_type ||= {} end
+
   end
 
 end
 
+require 'statlysis/utils'
 require 'statlysis/configuration'
 require 'statlysis/common'
 require 'statlysis/timeseries'
