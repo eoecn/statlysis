@@ -12,10 +12,7 @@ module Statlysis
 
     # 设置数据源，并保存结果入数据库
     def run
-      cron.source          = cron.source.order("#{cron.time_column} ASC") if @is_activerecord
-      cron.source          = cron.source.asc(cron.time_column) if @is_mongoid
-
-      (logger.info("#{cron.source_name} have no result!"); return false) if cron.output.blank?
+      (logger.info("#{cron.multiple_dataset.name} have no result!"); return false) if cron.output.blank?
       # delete first in range
       @output = cron.output
       unless @output.any?
@@ -40,7 +37,7 @@ module Statlysis
       te = (time+1.send(cron.time_unit)-1.second)
       tb, te = tb.to_i, te.to_i if is_time_column_integer?
       tb = time_begin || tb
-      return ["#{cron.time_column} >= ? AND #{cron.time_column} < ?", tb, te] if is_mysql?
+      return ["#{cron.time_column} >= ? AND #{cron.time_column} < ?", tb, te] if @is_activerecord
       return {cron.time_column => {"$gte" => tb.utc, "$lt" => te.utc}} if @is_mongoid # .utc  [fix undefined method `__bson_dump__' for Sun, 16 Dec 2012 16:00:00 +0000:DateTime]
     end
 

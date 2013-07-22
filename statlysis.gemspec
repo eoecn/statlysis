@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rake"
   s.add_dependency "rails"
   s.add_dependency "mysql2"
-  s.add_dependency "mongoid", "~> 3.0.0"
+  s.add_dependency "mongoid", ">= 3.0.0"
   s.add_dependency "activerecord"
   s.add_dependency "activerecord_idnamecache"
   s.add_dependency "activesupport"

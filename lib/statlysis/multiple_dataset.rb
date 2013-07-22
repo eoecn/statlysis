@@ -21,8 +21,7 @@ module Statlysis
       @sources ||= Set.new
       @sources.add s
 
-      _method_name = {:mongoid => :collection_name, :activerecord => :table_name}[Statlysis.source_to_database_type[s]]
-      @name = s.send(_method_name)
+      @name = s.send(Utils.name(s))
       return self
     end
 
