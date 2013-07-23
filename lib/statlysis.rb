@@ -53,8 +53,8 @@ module Statlysis
     def source_to_database_type; @_source_to_database_type ||= {} end
 
 
-    def daily; Statlysis.config.day_crons end
-    def hourly; Statlysis.config.hour_crons end
+    def daily; CronSet.new(Statlysis.config.day_crons) end
+    def hourly; CronSet.new(Statlysis.config.hour_crons) end
 
   end
 
@@ -67,6 +67,7 @@ require 'statlysis/timeseries'
 require 'statlysis/clock'
 require 'statlysis/rake'
 require 'statlysis/cron'
+require 'statlysis/cron_set'
 require 'statlysis/similar'
 require 'statlysis/multiple_dataset'
 

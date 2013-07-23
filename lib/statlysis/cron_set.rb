@@ -3,12 +3,14 @@
 require 'statlysis/cron'
 
 module Statlysis
-  class Crons < Set
+  class CronSet < Set
     def []
+      # TODO filter
       return self
     end
 
     def run
+      map(&:run)
     end
   end
 
