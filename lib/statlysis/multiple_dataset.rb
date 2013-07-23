@@ -4,7 +4,7 @@
 
 module Statlysis
   class MultipleDataset
-    attr_reader :regexp, :sources, :name
+    attr_reader :regexp, :sources
     def set_regexp regexp
       if regexp.is_a?(Regexp)
       elsif regexp.is_a?(String)
@@ -21,9 +21,22 @@ module Statlysis
       @sources ||= Set.new
       @sources.add s
 
-      @name = s.send(Utils.name(s))
       return self
     end
+
+    def name
+      if @sources.size.zero?
+        Statlysis.logger.warn "Add source to #{self} first!"
+        return nil
+      elsif @sources.size == 1
+        @sources.first.send(Utils.name(@sources.first))
+      else
+        @regexp
+      end
+    end
+    # Access dataset name, compact with many ORM
+    alias collection_name name # mongoid
+    alias table_name name # activerecord
 
   end
 end
