@@ -18,3 +18,22 @@ class EoeLog
 
   index({t: -1, ui: 1}, {:background => true})
 end
+
+
+# Setup a single log that combined by multiple collections
+{'07' => 1..31, '08' => 1..12}.map do |month, day_range|
+  day_range.map do |day|
+    # define model dynamically
+    collection_class_name = "MultipleLog2013#{month}#{day.to_s.rjust(2, '0')}"
+    Object.const_set(
+      collection_class_name,
+      (Class.new do
+        include Mongoid::Document
+        default_collection_name = collection_class_name.sub("MultipleLog", "multiple_log_")
+        field :t, :type => DateTime
+        field :url, :type => String
+      end)
+    )
+    collection_class = collection_class_name.constantize
+  end
+end

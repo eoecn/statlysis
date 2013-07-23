@@ -30,3 +30,15 @@ Dir[File.expand_path("../migrate/*.rb", __FILE__).to_s].each { |f| require f }
 Dir[File.expand_path("../models/*.rb", __FILE__).to_s].each { |f| require f }
 
 # load basic test data
+
+
+
+Statlysis.setup do
+  daily  CodeGist
+
+  hourly EoeLog, :t
+  daily  EoeLog, :t
+  daily  EoeLog.where(:do => 3), :t
+  daily  Mongoid[/multiple_log_2013[0-9]{4}/], :t
+  daily  Mongoid[/multiple_log_2013[0-9]{4}/].where(:ui => {"$ne" => 0}), :t
+end
