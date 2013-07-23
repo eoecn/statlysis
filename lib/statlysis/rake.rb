@@ -4,7 +4,7 @@ require 'rake'
 require 'only_one_rake'
 
 namespace :statlysis do
-  Statlysis::Units.each do |unit|
+  Statlysis::TimeUnits.each do |unit|
     desc "statistical in #{unit}"
     only_one_task "#{unit}_count" => :environment do
       Statlysis.config.send("#{unit}_crons").map(&:run)

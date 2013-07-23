@@ -4,6 +4,8 @@ Statistical & Analysis in Ruby DSL
 
 Usage
 -----------------------------------------------
+### setup
+
 ```ruby
 Statlysis.setup do
   set_database :statlysis
@@ -23,6 +25,14 @@ Statlysis.setup do
 end
 ```
 
+### access
+
+```ruby
+Statlysis.daily # => daily configurations
+Statlysis.daily.run # => run daily
+Statlysis.daily[/name_regexp/] # => return matched daily configurations
+```
+
 Features
 -----------------------------------------------
 * Support time column that stored as integer.
@@ -34,14 +44,6 @@ TODO
 3. Interacting with Javascript charting library, e.g. Highcharts, D3.
 5. More tests
 6. support collections which splited by date
-
-API TODO
------------------------------------------------
-```ruby
-Statlysis.daily # => daily configurations
-Statlysis.daily.run # => run daily
-Statlysis.daily[/name_regexp/] # => return matched daily configurations
-```
 
 FAQ
 -----------------------------------------------

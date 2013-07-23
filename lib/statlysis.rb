@@ -52,6 +52,10 @@ module Statlysis
 
     def source_to_database_type; @_source_to_database_type ||= {} end
 
+
+    def daily; Statlysis.config.day_crons end
+    def hourly; Statlysis.config.hour_crons end
+
   end
 
 end

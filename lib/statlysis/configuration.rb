@@ -10,12 +10,14 @@ module Statlysis
     include Singleton
 
     attr_accessor :sequel, :default_time_columns, :database_opts, :tablename_default_pre
-    Units.each {|unit| module_eval "attr_accessor :#{unit}_crons; self.instance.#{unit}_crons = []" }
+    attr_accessor :is_skip_database_index
+    TimeUnits.each {|unit| module_eval "attr_accessor :#{unit}_crons; self.instance.#{unit}_crons = []" }
     [:realtime, :similar, :hotest].each do |sym|
       sym = "#{sym}_crons"
       attr_accessor sym; self.instance.send "#{sym}=", []
     end
     self.instance.send "tablename_default_pre=", "st"
+    self.instance.send "is_skip_database_index=", false
 
     # 会在自动拼接统计数据库表名时去除这些时间字段
     def update_time_columns *columns
@@ -32,7 +34,7 @@ module Statlysis
       else
         raise "Statlysis#set_database only support symbol or hash params"
       end
-      self.sequel = Sequel.connect self.database_opts
+      self.sequel = Sequel.connect(self.database_opts)
 
       # 初始化键值model
       ["#{self.tablename_default_pre}_single_kvs", "#{self.tablename_default_pre}_single_kv_histories"].each do |tn|

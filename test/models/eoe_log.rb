@@ -35,5 +35,6 @@ end
       end)
     )
     collection_class = collection_class_name.constantize
+    collection_class.create
   end
 end
