@@ -1,4 +1,4 @@
-class CreateMessageChats < ActiveRecord::Migration
+class CreateActiveRecord < ActiveRecord::Migration
   create_table :message_chats do |t|
     t.integer  :uid, :default => 0
     t.integer  :channel_id, :default => 0

@@ -15,6 +15,7 @@ module Statlysis
       sym = "#{sym}_crons"
       attr_accessor sym; self.instance.send "#{sym}=", []
     end
+    self.instance.send "tablename_default_pre=", "st"
 
     # 会在自动拼接统计数据库表名时去除这些时间字段
     def update_time_columns *columns
@@ -32,6 +33,11 @@ module Statlysis
         raise "Statlysis#set_database only support symbol or hash params"
       end
       self.sequel = Sequel.connect self.database_opts
+
+      # 初始化键值model
+      ["#{self.tablename_default_pre}_single_kvs", "#{self.tablename_default_pre}_single_kv_histories"].each do |tn|
+        Utils.setup_pattern_table_and_model tn
+      end
     end
 
     def set_tablename_default_pre str

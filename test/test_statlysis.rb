@@ -19,8 +19,9 @@ class TestStatlysis < Test::Unit::TestCase
 
   def test_setup_lastest_visits_stat_table
     tn = 'st_blog_lastest_visits_tests'
-    lv = Statlysis::LastestVisits.new Company, :stat_table_name => tn, :test => true, :default_time => @old_datetime
-    lv.pattern_table_and_model tn
+    lv = Statlysis::LastestVisits.new EoeLog, :stat_table_name => tn, :test => true, :default_time => @old_datetime
+    h = Statlysis::Utils.setup_pattern_table_and_model tn
+    lv.stat_model = h[:model]
     is_sequel_model = lv.stat_model.respond_to?(:count)
     Statlysis.sequel.drop_table tn
 

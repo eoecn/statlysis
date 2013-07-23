@@ -6,7 +6,7 @@ module Statlysis
       super
       Statlysis.check_set_database
       cron.setup_stat_table
-      Statlysis.setup_stat_table_and_model cron
+      Utils.setup_pattern_table_and_model cron.stat_table_name
       cron
     end
 

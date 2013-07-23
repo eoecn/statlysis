@@ -1,6 +1,6 @@
-statlysis
+Statlysis
 ===============================================
-statistical analysis in ruby dsl
+Statistical & Analysis in Ruby DSL
 
 Usage
 -----------------------------------------------
@@ -8,23 +8,17 @@ Usage
 Statlysis.setup do
   set_database :statlysis
 
-  # 初始化键值model
-  Statlysis::Top.new('', :test => true).pattern_table_and_model 'st_single_kvs'
-  Statlysis::Top.new('', :test => true).pattern_table_and_model 'st_single_kv_histories'
-
   # 日常count
-  EoeLog.class # preload EoeLogTest
-  @log_model = IS_DEVELOP ? EoeLogTest : EoeLog
-  hourly @log_model, :t
-  daily  @log_model, :t
-  daily  @log_model.where(:ui => 0), :t
-  daily  @log_model.where(:ui => {"$ne" => 0}), :t
+  hourly EoeLog, :t
+  daily  EoeLog, :t
+  daily  EoeLog.where(:ui => 0), :t
+  daily  EoeLog.where(:ui => {"$ne" => 0}), :t
   daily  Mongoid[/eoe_logs_[0-9]+$/].where(:ui => {"$ne" => 0}), :t
 
   # 统计各个模块
-  daily  @log_model.where(:do => {"$in" => [DOMAINS_HASH[:blog], DOMAINS_HASH[:my]]}), :t
+  daily  EoeLog.where(:do => {"$in" => [DOMAINS_HASH[:blog], DOMAINS_HASH[:my]]}), :t
   [:www, :code, :skill, :book, :edu, :news, :wiki, :salon, :android].each do |site|
-    daily  @log_model.where(:do => DOMAINS_HASH[site]), :t
+    daily  EoeLog.where(:do => DOMAINS_HASH[site]), :t
   end
 end
 ```

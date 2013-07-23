@@ -47,21 +47,6 @@ module Statlysis
       delegate sym, :to => :config
     end
 
-    def setup_stat_table_and_model cron, tablename = nil
-      tablename = cron.stat_table_name if tablename.nil?
-      tablename ||= cron.stat_table.first_source_table
-      cron.stat_table = Statlysis.sequel[tablename.to_sym]
-
-      str = tablename.to_s.singularize.camelize
-      eval("class ::#{str} < Sequel::Model;
-        self.set_dataset :#{tablename}
-        def self.[] item_id
-          JSON.parse(find_or_create(:pattern => item_id).result) rescue []
-        end
-      end; ")
-      cron.stat_model = str.constantize
-    end
-
     attr_accessor :logger
     Statlysis.logger ||= Logger.new($stdout)
 

@@ -12,7 +12,7 @@ module Statlysis
 
       # 初始化表和模型
       cron.stat_table_name = [Statlysis.tablename_default_pre, "similar", model_name].compact.join("_")
-      cron.pattern_table_and_model cron.stat_table_name
+      Utils.setup_pattern_table_and_model cron.stat_table_name
 
       cron.id_to_similar_ids = {}
       cron
