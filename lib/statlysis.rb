@@ -71,6 +71,12 @@ require 'statlysis/cron_set'
 require 'statlysis/similar'
 require 'statlysis/multiple_dataset'
 
+module Statlysis
+  require 'short_inspect'
+  ShortInspect.apply_to Cron, CronSet, MultipleDataset
+end
+
+
 
 # load rake tasks
 module Statlysis
