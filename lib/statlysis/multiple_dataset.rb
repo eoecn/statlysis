@@ -7,8 +7,9 @@ module Statlysis
     attr_reader :regexp, :sources
     def set_regexp regexp
       @sources ||= Set.new
-      if regexp.is_a?(Regexp)
-      elsif regexp.is_a?(String)
+      case regexp
+      when Regexp
+      when String
         regexp = Regexp.new(string)
       else
         raise "regexp #{regexp} should be a Regexp!" 
