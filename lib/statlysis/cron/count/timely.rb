@@ -2,10 +2,10 @@
 
 module Statlysis
   class Timely < Count
-    def setup_stat_table
-      # TODO migration proc, merge into setup_stat_table_and_model
+    def setup_stat_model
       cron.stat_table_name = [cron.class.name.split("::")[-1], cron.multiple_dataset.name, cron.source_where_array.join, cron.time_unit[0]].map {|s| s.to_s.gsub('_','') }.reject {|s| s.blank? }.join('_').downcase
       raise "mysql only support table_name in 64 characters, the size of '#{cron.stat_table_name}' is #{cron.stat_table_name.to_s.size}. please set cron.stat_table_name when you create a Cron instance" if cron.stat_table_name.to_s.size > 64
+
       if not Statlysis.sequel.table_exists?(cron.stat_table_name)
         Statlysis.sequel.transaction do
           Statlysis.sequel.create_table cron.stat_table_name, DefaultTableOpts do
@@ -25,6 +25,12 @@ module Statlysis
             Statlysis.sequel.add_index cron.stat_table_name, index_column_names, :name => index_column_names_name
           end
         end
+
+        cron.stat_model = eval(
+          "class ::#{cron.stat_table_name.to_s.singularize.camelize} < Sequel::Model;
+            self.set_dataset :#{cron.stat_table_name}
+          end; "
+        )
       end
     end
 

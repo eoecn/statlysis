@@ -24,10 +24,11 @@ module Statlysis
         c.included_modules.index(Mongoid::Document)
       end
       _collections.select do |_collection|
-        model = mongoid_models.detect {|m| m.collection_name === _collection.name }
-        raise "Please define Mongoid model for #{_collection}.collection under ::Object namespace!" if model.nil?
-        mongoid_models.delete model
-        @sources.add model
+        _mongoid_model = mongoid_models.detect {|m| m.collection_name === _collection.name }
+        raise "Please define Mongoid model for #{_collection}.collection under ::Object namespace!" if _mongoid_model.nil?
+        mongoid_models.delete _mongoid_model
+        puts "#{self} #{_mongoid_model}"
+        @sources.add _mongoid_model
       end
 
       return self

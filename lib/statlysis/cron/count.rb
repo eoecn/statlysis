@@ -5,8 +5,7 @@ module Statlysis
     def initialize source, opts = {}
       super
       Statlysis.check_set_database
-      cron.setup_stat_table
-      Utils.setup_pattern_table_and_model cron.stat_table_name
+      cron.setup_stat_model
       cron
     end
 
@@ -20,10 +19,10 @@ module Statlysis
       end
       num_i = 0; num_add = 999
       Statlysis.sequel.transaction do
-        cron.stat_table.where("t >= ? AND t <= ?", cron.output[0][:t], cron.output[-1][:t]).delete
+        cron.stat_model.where("t >= ? AND t <= ?", cron.output[0][:t], cron.output[-1][:t]).delete
         while !(_a = @output[num_i..(num_i+num_add)]).blank? do
           # batch insert all
-          cron.stat_table.multi_insert _a
+          cron.stat_model.multi_insert _a
           num_i += (num_add + 1)
         end
       end

@@ -5,7 +5,7 @@ module Statlysis
     extend ActiveSupport::Concern
 
     self.included do
-      attr_accessor :stat_table_name, :stat_model, :stat_table
+      attr_accessor :stat_table_name, :stat_model
     end
 
     def cron; self end

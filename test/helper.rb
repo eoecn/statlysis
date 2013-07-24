@@ -1,3 +1,4 @@
+require File.join(ENV['HOME'], 'utils/ruby/irb') rescue nil
 require 'rubygems'
 require 'bundler'
 begin
@@ -45,5 +46,6 @@ Statlysis.setup do
   daily  EoeLog.where(:do => 3), :t
   daily  Mongoid[/multiple_log_2013[0-9]{4}/], :t
   daily  Mongoid[/multiple_log_2013[0-9]{4}/].where(:ui => {"$ne" => 0}), :t
+  cron = Statlysis.daily['mul'][0]
   require 'pry-debugger';binding.pry
 end

@@ -23,7 +23,7 @@ module Statlysis
     end
     def output; raise DefaultNotImplementWrongMessage end
     def reoutput; @output = nil; output end
-    def setup_stat_table; raise DefaultNotImplementWrongMessage end
+    def setup_stat_model; raise DefaultNotImplementWrongMessage end
     def run; raise  DefaultNotImplementWrongMessage end
 
     def _source
@@ -46,8 +46,8 @@ module Statlysis
       return TimeSeries.parse(ENV['TIME_RANGE'], :unit => (ENV['TIME_UNIT'] || 'day')) if ENV['TIME_RANGE']
       # 选择开始时间。取出统计表的最后时间，和数据表的最先时间对比，哪个最后就选择
       begin_day = DateTime.now.beginning_of_day
-      st_timebegin = (a = cron.stat_table.order(:t).where("t >= ?", begin_day.yesterday).first) ? a[:t] : nil
-      cron.stat_table.where("t >= ?", begin_day.tomorrow).delete # 明天的数据没出来肯定统计不了
+      st_timebegin = (a = cron.stat_model.order(:t).where("t >= ?", begin_day.yesterday).first) ? a[:t] : nil
+      cron.stat_model.where("t >= ?", begin_day.tomorrow).delete # 明天的数据没出来肯定统计不了
       timebegin = (a = _source.first) ? a.send(cron.time_column) : (DateTime.now - 1.second)
       timebegin = Time.at(timebegin) if is_time_column_integer?
       timebegin = (st_timebegin > timebegin) ? st_timebegin : timebegin if st_timebegin
