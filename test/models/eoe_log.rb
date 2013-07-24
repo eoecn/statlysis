@@ -25,16 +25,16 @@ end
   day_range.map do |day|
     # define model dynamically
     collection_class_name = "MultipleLog2013#{month}#{day.to_s.rjust(2, '0')}"
-    Object.const_set(
-      collection_class_name,
-      (Class.new do
+    collection_name = collection_class_name.sub("MultipleLog", "multiple_log_")
+    eval("
+      class #{collection_class_name}
         include Mongoid::Document
-        default_collection_name = collection_class_name.sub("MultipleLog", "multiple_log_")
+        default_collection_name = #{collection_name.to_json}
         field :t, :type => DateTime
         field :url, :type => String
-      end)
-    )
+        index({t: -1}, {:background => true})
+      end
+    ")
     collection_class = collection_class_name.constantize
-    collection_class.create
   end
 end

@@ -28,8 +28,6 @@ production:
     # Note this can also be true if you want to preload everything, but this is
     # almost never necessary. Most of the time set this to false.
     preload_models:
-      - Company
-      # - Browser
       # - Firefox
     scope_overwrite_exception: true
     raise_not_found_error: false
