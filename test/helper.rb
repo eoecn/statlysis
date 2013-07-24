@@ -31,6 +31,7 @@ Dir[File.expand_path("../migrate/*.rb", __FILE__).to_s].each { |f| require f }
 Dir[File.expand_path("../models/*.rb", __FILE__).to_s].each { |f| require f }
 
 # load basic test data
+# copied from http://stackoverflow.com/questions/4410794/ruby-on-rails-import-data-from-a-csv-file/4410880#4410880
 require 'csv'
 csv = CSV.parse(File.read(File.expand_path('../data/code_gists_20130724.csv', __FILE__)), :headers => true) # data from code.eoe.cn
 csv.each {|row| CodeGist.create!(row.to_hash) }
