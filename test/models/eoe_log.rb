@@ -18,6 +18,7 @@ class EoeLog
 
   index({t: -1, ui: 1}, {:background => true})
 end
+EoeLog.create
 
 
 # Setup a single log that combined by multiple collections
@@ -26,15 +27,21 @@ end
     # define model dynamically
     collection_class_name = "MultipleLog2013#{month}#{day.to_s.rjust(2, '0')}"
     collection_name = collection_class_name.sub("MultipleLog", "multiple_log_")
+
+    # Object.const_set(name, Class.new {}) cause failed with error 16256: "Invalid ns [statlysis_mongoid_test.]",
+    # and cann't Mongoid.create data
     eval("
       class #{collection_class_name}
         include Mongoid::Document
-        default_collection_name = #{collection_name.to_json}
+        self.default_collection_name = #{collection_name.to_json}
         field :t, :type => DateTime
         field :url, :type => String
         index({t: -1}, {:background => true})
       end
     ")
+
     collection_class = collection_class_name.constantize
+    collection_class.create
+    collection_class.count
   end
 end

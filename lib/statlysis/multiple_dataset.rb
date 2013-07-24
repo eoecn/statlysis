@@ -32,7 +32,8 @@ module Statlysis
       elsif sources.size == 1
         sources.first.send(Utils.name(sources.first))
       else
-        regexp
+        # /multiple_log_2013[0-9]{4}/ => 'multiple_log'
+        regexp.inspect[1..-2].gsub(/\-|\[|\]|\{|\}|[0-9]/, '').sub(/\_+$/, '')
       end
     end
     # Access dataset name, compact with many ORM
