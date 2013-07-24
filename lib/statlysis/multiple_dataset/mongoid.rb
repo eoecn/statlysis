@@ -8,13 +8,10 @@ require 'origin'
 
 module Statlysis
   class MongoidDataset < MultipleDataset
-    include Origin::Queryable
+    include Origin::Queryable # it overwrite MongoidDataset#initialize
 
     def set_regexp regexp
       super
-
-      @sources = []
-
       return self
     end
 
