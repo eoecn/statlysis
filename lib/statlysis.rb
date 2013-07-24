@@ -8,6 +8,7 @@
 # TODO Statlysis.sequel.tables.map {|t| eval "class ::#{t.to_s.camelize} < ActiveRecord::Base; self.establish_connection Statlysis.database_opts; self.table_name = :#{t}; end; #{t.to_s.camelize}" }
 
 require "active_support/all"
+require "active_support/core_ext"
 require 'active_support/core_ext/module/attribute_accessors.rb'
 require 'active_record'
 require 'activerecord_idnamecache'

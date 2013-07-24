@@ -8,7 +8,7 @@ require 'origin'
 
 module Statlysis
   class MongoidDataset < MultipleDataset
-    include Origin::Queryable # it overwrite MongoidDataset#initialize
+    include Origin::Queryable # it overwrite MongoidDataset#initialize, so we can't puts @sources in the parent class MultipleDataset
 
     def set_regexp regexp
       super
