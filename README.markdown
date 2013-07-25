@@ -45,6 +45,14 @@ TODO
 5. More tests
 6. support collections which splited by date
 
+
+Statistical Process
+-----------------------------------------------
+1. Delete invalid statistical data, e.g. data in tomorrow
+2. Count data within the specified time by the dimensions
+3. Delete overlapping data, and insert new data
+
+
 FAQ
 -----------------------------------------------
 Q: why use Sequel instead of ActiveRecord?
