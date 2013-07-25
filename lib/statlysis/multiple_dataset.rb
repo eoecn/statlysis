@@ -19,19 +19,21 @@ module Statlysis
       return self
     end
 
+    def set_time_column time_column; raise DefaultNotImplementWrongMessage; return self; end # support method chain
+
     def add_source s
       @sources ||= Set.new
-      sources.add s
+      @sources.add s
 
       return self
     end
 
     def name
-      if sources.size.zero?
+      if @sources.size.zero?
         Statlysis.logger.warn "Add source to #{self} first!"
         return nil
-      elsif sources.size == 1
-        sources.first.send(Utils.name(sources.first))
+      elsif @sources.size == 1
+        @sources.first.send(Utils.name(@sources.first))
       else
         # /multiple_log_2013[0-9]{4}/ => 'multiple_log'
         regexp.inspect[1..-2].gsub(/\-|\[|\]|\{|\}|[0-9]/, '').sub(/\_+$/, '')

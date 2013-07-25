@@ -27,10 +27,14 @@ module Statlysis
         _mongoid_model = mongoid_models.detect {|m| m.collection_name === _collection.name }
         raise "Please define Mongoid model for #{_collection}.collection under ::Object namespace!" if _mongoid_model.nil?
         mongoid_models.delete _mongoid_model
-        puts "#{self} #{_mongoid_model}"
         @sources.add _mongoid_model
       end
 
+      return self
+    end
+
+    def set_time_column time_column
+      @sources = @sources.map {|s| s.asc(time_column) }
       return self
     end
 

@@ -5,17 +5,18 @@ module Statlysis
     attr_reader :multiple_dataset, :time_column, :time_unit
     include Common
 
-    def initialize source, opts = {}
+    def initialize s, opts = {}
       # setup data type related
-      @is_activerecord = Utils.is_activerecord?(source)
-      @is_mongoid      = Utils.is_mongoid?(source)
+      @is_activerecord = Utils.is_activerecord?(s)
+      @is_mongoid      = Utils.is_mongoid?(s)
 
       @time_column      = opts[:time_column]
       @time_unit        = opts[:time_unit]
 
       # insert source as a dataset
-      @multiple_dataset = ActiveRecordDataset.new.add_source(source.order("#{cron.time_column} ASC")) if @is_activerecord
-      @multiple_dataset = MongoidDataset.new.add_source(source.asc(cron.time_column)) if @is_mongoid
+      md = (s.is_a?(ActiveRecordDataset) ? s : ActiveRecordDataset.new.add_source(s)) if @is_activerecord
+      md = (s.is_a?(MongoidDataset) ? s : MongoidDataset.new.add_source(s)) if @is_mongoid
+      @multiple_dataset = md.set_time_column(cron.time_column)
 
       @stat_table_name = opts[:stat_table_name] if opts[:stat_table_name]
 
