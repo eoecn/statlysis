@@ -9,6 +9,7 @@ module Statlysis
       # setup data type related
       @is_activerecord = Utils.is_activerecord?(s)
       @is_mongoid      = Utils.is_mongoid?(s)
+      @is_orm          = @is_activerecord || @is_mongoid
 
       @time_column      = opts[:time_column]
       @time_unit        = opts[:time_unit]
@@ -16,7 +17,7 @@ module Statlysis
       # insert source as a dataset
       @multiple_dataset = (s.is_a?(ActiveRecordDataset) ? s : ActiveRecordDataset.new(cron).add_source(s)) if @is_activerecord
       @multiple_dataset = (s.is_a?(MongoidDataset) ? s : MongoidDataset.new(cron).add_source(s)) if @is_mongoid
-      @multiple_dataset.instance_variable_set("@cron", cron) if @multiple_dataset.cron.nil?
+      @multiple_dataset.instance_variable_set("@cron", cron) if @is_orm && @multiple_dataset.cron.nil?
 
       @stat_table_name = opts[:stat_table_name] if opts[:stat_table_name]
 
