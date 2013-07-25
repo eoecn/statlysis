@@ -8,7 +8,24 @@ require 'origin'
 
 module Statlysis
   class MongoidDataset < MultipleDataset
-    include Origin::Queryable # it overwrite MongoidDataset#initialize, so we can't puts @sources in the parent class MultipleDataset
+
+    # Origin::Queryable overwrite MongoidDataset#initialize, so we can't puts @sources in the parent class MultipleDataset
+    # and we puts it in Query.class now.
+    class Query; include Origin::Queryable end
+
+    # delegate mongoid query to @sources
+    # see document at http://rubydoc.info/github/mongoid/origin/Origin/Queryable & http://rubydoc.info/github/mongoid/origin/Origin/Forwardable
+    attr_reader :criteria
+    def method_missing m, *args, &blk
+      @criteria ||= Query.new
+      if (Origin::Selectable.forwardables + Origin::Optional.forwardables).include?(m)
+        @criteria = @criteria.__send__(m, *args, &blk)
+        @sources = @sources.map {|s| s.__send__(m, *args, &blk) }
+        return self # support method chain
+      else
+        super
+      end
+    end
 
     def set_regexp regexp
       super
@@ -37,6 +54,7 @@ module Statlysis
       @sources = @sources.map {|s| s.asc(time_column) }
       return self
     end
+
 
   end
 

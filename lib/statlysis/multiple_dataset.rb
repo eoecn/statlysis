@@ -4,9 +4,13 @@
 
 module Statlysis
   class MultipleDataset
+    def initialize
+      @sources ||= Set.new
+      return self
+    end
+
     attr_reader :regexp, :sources
     def set_regexp regexp
-      @sources ||= Set.new
       case regexp
       when Regexp
       when String
@@ -22,7 +26,6 @@ module Statlysis
     def set_time_column time_column; raise DefaultNotImplementWrongMessage; return self; end # support method chain
 
     def add_source s
-      @sources ||= Set.new
       @sources.add s
 
       return self
