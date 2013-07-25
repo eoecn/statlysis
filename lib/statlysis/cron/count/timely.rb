@@ -25,13 +25,15 @@ module Statlysis
             Statlysis.sequel.add_index cron.stat_table_name, index_column_names, :name => index_column_names_name
           end
         end
-
-        cron.stat_model = eval(
-          "class ::#{cron.stat_table_name.to_s.singularize.camelize} < Sequel::Model;
-            self.set_dataset :#{cron.stat_table_name}
-          end; "
-        )
       end
+
+      n = cron.stat_table_name.to_s.singularize.camelize
+      cron.stat_model = class_eval <<-MODEL, __FILE__, __LINE__+1
+        class ::#{n} < Sequel::Model;
+          self.set_dataset :#{cron.stat_table_name}
+        end
+        #{n}
+      MODEL
     end
 
     def output
