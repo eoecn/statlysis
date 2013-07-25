@@ -16,6 +16,8 @@ module Statlysis
       end
     end
 
+    def last; [-1]; end
+
     def run
       map(&:run)
     end
