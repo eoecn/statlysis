@@ -75,8 +75,8 @@ require 'statlysis/multiple_dataset'
 module Statlysis
   require 'short_inspect'
   ShortInspect.apply_to Cron, CronSet, MultipleDataset
+  ShortInspect.apply_minimal_to ActiveRecord::Relation # lazy load
 end
-
 
 
 # load rake tasks

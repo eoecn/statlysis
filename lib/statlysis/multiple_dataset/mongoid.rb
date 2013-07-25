@@ -8,9 +8,7 @@ require 'origin'
 
 module Statlysis
   class MongoidDataset < MultipleDataset
-
-    # Origin::Queryable overwrite MongoidDataset#initialize, so we can't puts @sources in the parent class MultipleDataset
-    # and we puts it in Query.class now.
+    # Notice: Origin::Queryable overwrite MongoidDataset#initialize
     class Query; include Origin::Queryable end
 
     # delegate mongoid query to @sources
