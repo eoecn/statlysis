@@ -4,10 +4,17 @@ require 'active_record'
 
 module Statlysis
   class ActiveRecordDataset < MultipleDataset
-    def set_time_column time_column
-      @sources = @sources.map {|s| s.order("#{time_column} ASC") }
+    def set_regexp regexp
+      super
+
+      # TODO support multiple
+
+      _resort_source_order
+
       return self
     end
+
+    def resort_source_order; @sources = @sources.map {|s| s.order("#{cron.time_column} ASC") } end
 
   end
 

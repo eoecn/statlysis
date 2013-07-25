@@ -1,15 +1,14 @@
 # encoding: UTF-8
 
-# TODO support Activerecord
-
 module Statlysis
   class MultipleDataset
-    def initialize
+    def initialize cron = nil
+      @cron = cron
       @sources ||= Set.new
       return self
     end
 
-    attr_reader :regexp, :sources
+    attr_reader :cron, :regexp, :sources
     def set_regexp regexp
       case regexp
       when Regexp
@@ -22,8 +21,6 @@ module Statlysis
 
       return self
     end
-
-    def set_time_column time_column; raise DefaultNotImplementWrongMessage; return self; end # support method chain
 
     def add_source s
       @sources.add s
@@ -45,6 +42,13 @@ module Statlysis
     # Access dataset name, compact with many ORM
     alias collection_name name # mongoid
     alias table_name name # activerecord
+
+
+    def first_time
+      _resort_source_order.map(&:first).compact.map {|i| i.send(cron.time_column) }.compact.min || DateTime1970
+    end
+    def _resort_source_order; resort_source_order if cron; end # lazy load if cron is unassigned
+    def resort_source_order; raise DefaultNotImplementWrongMessage; end
 
   end
 end

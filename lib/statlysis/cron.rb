@@ -14,9 +14,9 @@ module Statlysis
       @time_unit        = opts[:time_unit]
 
       # insert source as a dataset
-      md = (s.is_a?(ActiveRecordDataset) ? s : ActiveRecordDataset.new.add_source(s)) if @is_activerecord
-      md = (s.is_a?(MongoidDataset) ? s : MongoidDataset.new.add_source(s)) if @is_mongoid
-      @multiple_dataset = md.set_time_column(cron.time_column)
+      @multiple_dataset = (s.is_a?(ActiveRecordDataset) ? s : ActiveRecordDataset.new(cron).add_source(s)) if @is_activerecord
+      @multiple_dataset = (s.is_a?(MongoidDataset) ? s : MongoidDataset.new(cron).add_source(s)) if @is_mongoid
+      @multiple_dataset.instance_variable_set("@cron", cron) if @multiple_dataset.cron.nil?
 
       @stat_table_name = opts[:stat_table_name] if opts[:stat_table_name]
 
@@ -45,11 +45,13 @@ module Statlysis
     # specify TIME_RANGE and TIME_UNIT in shell to run
     def time_range
       return TimeSeries.parse(ENV['TIME_RANGE'], :unit => (ENV['TIME_UNIT'] || 'day')) if ENV['TIME_RANGE']
-      # 选择开始时间。取出统计表的最后时间，和数据表的最先时间对比，哪个最后就选择
+      # 选择开始时间。取出统计表的最后时间，和数据表的最先时间对比，哪个在后就选择哪个
       begin_day = DateTime.now.beginning_of_day
       st_timebegin = (a = cron.stat_model.order(:t).where("t >= ?", begin_day.yesterday).first) ? a[:t] : nil
+
+      # TODO support multiple log
       cron.stat_model.where("t >= ?", begin_day.tomorrow).delete # 明天的数据没出来肯定统计不了
-      timebegin = (a = _source.first) ? a.send(cron.time_column) : (DateTime.now - 1.second)
+      timebegin = (multiple_dataset.first_time != DateTime1970) ? multiple_dataset.first_time : (DateTime.now - 1.second)
       timebegin = Time.at(timebegin) if is_time_column_integer?
       timebegin = (st_timebegin > timebegin) ? st_timebegin : timebegin if st_timebegin
 

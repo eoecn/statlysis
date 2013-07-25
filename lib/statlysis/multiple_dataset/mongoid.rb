@@ -45,14 +45,12 @@ module Statlysis
         @sources.add _mongoid_model
       end
 
+      _resort_source_order
+
       return self
     end
 
-    def set_time_column time_column
-      @sources = @sources.map {|s| s.asc(time_column) }
-      return self
-    end
-
+    def resort_source_order; @sources = @sources.map {|s| s.asc(cron.time_column) } end
 
   end
 

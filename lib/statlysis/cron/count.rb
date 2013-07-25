@@ -26,6 +26,8 @@ module Statlysis
           num_i += (num_add + 1)
         end
       end
+
+      return self
     end
 
 
