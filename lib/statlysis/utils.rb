@@ -24,12 +24,14 @@ module Statlysis
 
         # generate a statlysis kv model
         str = tn.to_s.singularize.camelize
-        eval("class ::#{str} < Sequel::Model;
-          self.set_dataset :#{tn}
-          def self.[] item_id
-            JSON.parse(find_or_create(:pattern => item_id).result) rescue []
-          end
-        end; ")
+        class_eval <<-MODEL, __FILE__, __LINE__ + 1
+          class ::#{str} < Sequel::Model;
+            self.set_dataset :#{tn}
+            def self.[] item_id
+              JSON.parse(find_or_create(:pattern => item_id).result) rescue []
+            end
+          end;
+        MODEL
         {:table => tn, :model => str.constantize}
       end
 

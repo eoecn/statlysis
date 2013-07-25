@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-require 'rake'
+require "bundler/gem_tasks"
 require 'rake/testtask'
 
 Rake::TestTask.new do |t|
