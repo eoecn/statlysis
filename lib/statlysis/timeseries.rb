@@ -34,7 +34,7 @@ module Statlysis
 
       array = array.map {|s| s.to_time } if opts[:utc]
       array = array.map {|i| i + opts[:offset] } if opts[:offset]
-      array.map(&:in_time_zone)
+      array.map(&:to_datetime)
     end
 
   end
