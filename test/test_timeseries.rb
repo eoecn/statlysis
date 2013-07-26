@@ -43,7 +43,7 @@ class TestTimeSeries < Test::Unit::TestCase
   end
 
   def test_clock_set_time
-    clock = Statlysis::Clock.new "mvj3", Time.now
+    clock = Statlysis::Clock.new "parse_EoeLog", Time.now
     clock.update @old_datetime
     update_old_time = (@old_datetime != clock.current)
     assert(update_old_time, "Can't update old time")

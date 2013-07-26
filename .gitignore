@@ -50,3 +50,5 @@ tmtags
 
 coverage
 *.gem
+Gemfile.lock
+tmp

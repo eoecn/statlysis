@@ -3,7 +3,7 @@
 module Statlysis
   module Javascript
     class MultiDimensionalCount
-      attr_accessor :map_func, :reduce_func
+      attr_reader :map_func, :reduce_func
 
       def initialize *fields
         fields = :_id if fields.blank?
@@ -17,11 +17,11 @@ module Statlysis
           raise "Please assign symbol, string, or array of them"
         end
 
-        self.map_func = "function() {
+        @map_func = "function() {
           emit (#{emit_key}, {count: 1});
         }"
 
-        self.reduce_func = "function(key, values) {
+        @reduce_func = "function(key, values) {
           var count = 0;
 
           values.forEach(function(v) {

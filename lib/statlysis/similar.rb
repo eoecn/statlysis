@@ -12,27 +12,27 @@ module Statlysis
 
       # 初始化表和模型
       cron.stat_table_name = [Statlysis.tablename_default_pre, "similar", model_name].compact.join("_")
-      cron.pattern_table_and_model cron.stat_table_name
+      Utils.setup_pattern_table_and_model cron.stat_table_name
 
       cron.id_to_similar_ids = {}
       cron
     end
 
     def process
-      puts "SimilarProcess #{cron.stat_model} at #{DateTime.now}"
+      logger.info "SimilarProcess #{cron.stat_model} at #{DateTime.now}"
       require 'gsl'
       require 'tf-idf-similarity'
 
       # 初始化文档
-      puts "开始取出 cron.id_to_text_hash_proc"
+      logger.info "开始取出 cron.id_to_text_hash_proc"
       @id_to_text_hash = cron.id_to_text_hash_proc.call
 
-      puts "开始把@id_to_text_hash转化为数组"
+      logger.info "开始把@id_to_text_hash转化为数组"
       as = @id_to_text_hash.to_a
 
-      puts "开始把as slice为1200每次"
+      logger.info "开始把as slice为1200每次"
       as.each_slice(1200) do |a|
-      puts "开始跑 #{a.size}  个条目的相似性"
+      logger.info "开始跑 #{a.size}  个条目的相似性"
       cron.corpus = TfIdfSimilarity::Collection.new
       a.each do |id, text|
         cron.corpus << TfIdfSimilarity::Document.new(text, :id => id)
@@ -59,15 +59,15 @@ module Statlysis
           _item_id_to_score[matrix_idx_to_item_id_hash[idx2]] = (num.nan? ? 0.0 : num)
         end
         _item_id_to_score.delete document.id
-        puts "对比文档："
-        puts "#{document.id} # #{summary(document.id)}"
-        puts "相关文档："
+        logger.info "对比文档："
+        logger.info "#{document.id} # #{summary(document.id)}"
+        logger.info "相关文档："
         _item_ids = _item_id_to_score.sort {|a1, b1| b1[1] <=> a1[1] }
         _item_ids[0..9].each do |item_id, score|
-          puts "#{score} #  #{summary(item_id)}"
+          logger.info "#{score} #  #{summary(item_id)}"
         end
         cron.id_to_similar_ids[document.id] = _item_ids[0..99].map(&:first)
-        puts
+        logger.info
       end
 
       # save results to database

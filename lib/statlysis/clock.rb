@@ -1,12 +1,11 @@
 # encoding: UTF-8
 
 module Statlysis
-  DateTime1970 = DateTime.parse("19700101").in_time_zone
-
   class Clock
     attr_accessor :clock
     include Common
 
+    # feature is a string
     def initialize feature, default_time
       raise "Please assign default_time params" if not default_time
       cron.stat_table_name = [Statlysis.tablename_default_pre, 'clocks'].compact.join("_")
@@ -18,7 +17,8 @@ module Statlysis
           index       :feature, :unique => true
         end
       end
-      Statlysis.setup_stat_table_and_model cron
+      h = Utils.setup_pattern_table_and_model cron.stat_table_name
+      cron.stat_model = h[:model]
       cron.clock = cron.stat_model.find_or_create(:feature => feature)
       cron.clock.update :t => default_time if cron.current.nil?
       cron

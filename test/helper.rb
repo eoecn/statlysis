@@ -1,3 +1,4 @@
+require File.join(ENV['HOME'], 'utils/ruby/irb') rescue nil
 require 'rubygems'
 require 'bundler'
 begin
@@ -9,14 +10,46 @@ rescue Bundler::BundlerError => e
 end
 require 'test/unit'
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+$LOAD_PATH.unshift File.dirname(__FILE__) # test dirs
+
+# load mongoid setup
+require 'mongoid'
+Mongoid.load!(File.expand_path("../config/mongoid.yml", __FILE__), :production)
+Mongoid.default_session.collections.select {|c| c.name !~ /system/ }.each(&:drop) # delete lastest data
+
 require 'statlysis'
 
-def Rails.root; Pathname.new(ENV['RAILS_ROOT'] || "#{Dir.pwd}/../..") end
-raise "Please setup RAILS_ROOT shell env first!" if not File.exists?(Rails.root.join("config/database.yml"))
+# load rails
+def Rails.root; Pathname.new(File.expand_path('../.', __FILE__)) end
+require 'sqlite3'
 
+# load ActiveRecord setup
 Statlysis.set_database :statlysis
+Statlysis.config.is_skip_database_index = true
+ActiveRecord::Base.establish_connection(Statlysis.config.database_opts.merge("adapter" => "sqlite3"))
+Dir[File.expand_path("../migrate/*.rb", __FILE__).to_s].each { |f| require f }
+Dir[File.expand_path("../models/*.rb", __FILE__).to_s].each { |f| require f }
 
-class Test::Unit::TestCase
+# load basic test data
+# copied from http://stackoverflow.com/questions/4410794/ruby-on-rails-import-data-from-a-csv-file/4410880#4410880
+require 'csv'
+csv = CSV.parse(File.read(File.expand_path('../data/code_gists_20130724.csv', __FILE__)), :headers => true) # data from code.eoe.cn
+csv.each {|row| CodeGist.create!(row.to_hash) }
+
+
+Statlysis.setup do
+  hourly EoeLog, :time_column => :t
+
+  daily  CodeGist
+
+  [EoeLog,
+   EoeLog.where(:do => 3),
+   Mongoid[/multiple_log_2013[0-9]{4}/],
+   Mongoid[/multiple_log_2013[0-9]{4}/].where(:ui => {"$ne" => 0})
+  ].each do |s|
+    daily s, :time_column => :t
+  end
+  cron = Statlysis.daily['mul'][1]
+  require 'pry-debugger';binding.pry
 end

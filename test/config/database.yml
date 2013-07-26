@@ -1,0 +1,9 @@
+production: &defaults
+  host: localhost
+  adapter: sqlite
+  encoding: utf8
+  collation: utf8_general_ci
+  database: ":memory:"
+statlysis:
+  <<: *defaults
+#  database: statlysis
