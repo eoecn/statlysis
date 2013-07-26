@@ -39,13 +39,17 @@ csv.each {|row| CodeGist.create!(row.to_hash) }
 
 
 Statlysis.setup do
+  hourly EoeLog, :time_column => :t
+
   daily  CodeGist
 
-  hourly EoeLog, :t
-  daily  EoeLog, :t
-  daily  EoeLog.where(:do => 3), :t
-  daily  Mongoid[/multiple_log_2013[0-9]{4}/], :t
-  daily  Mongoid[/multiple_log_2013[0-9]{4}/].where(:ui => {"$ne" => 0}), :t
+  [EoeLog,
+   EoeLog.where(:do => 3),
+   Mongoid[/multiple_log_2013[0-9]{4}/],
+   Mongoid[/multiple_log_2013[0-9]{4}/].where(:ui => {"$ne" => 0})
+  ].each do |s|
+    daily s, :time_column => :t
+  end
   cron = Statlysis.daily['mul'][1]
   require 'pry-debugger';binding.pry
 end

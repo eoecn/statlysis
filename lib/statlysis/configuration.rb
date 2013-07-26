@@ -46,8 +46,8 @@ module Statlysis
       self.tablename_default_pre = str.to_s
     end
 
-    def daily source, time_column = :created_at; timely source, :time_unit => :day, :time_column => time_column end
-    def hourly source, time_column = :created_at; timely source, :time_unit => :hour, :time_column => time_column end
+    def daily  source, opts = {}; timely source, {:time_unit => :day }.merge(opts) end
+    def hourly source, opts = {}; timely source, {:time_unit => :hour}.merge(opts) end
 
     def check_set_database; raise "Please setup database first" if sequel.nil?  end
 
