@@ -10,17 +10,14 @@ Usage
 Statlysis.setup do
   set_database :statlysis
 
-  # 日常count
-  hourly EoeLog, :t
-  daily  EoeLog, :t
-  daily  EoeLog.where(:ui => 0), :t
-  daily  EoeLog.where(:ui => {"$ne" => 0}), :t
-  daily  Mongoid[/eoe_logs_[0-9]+$/].where(:ui => {"$ne" => 0}), :t
-
-  # 统计各个模块
-  daily  EoeLog.where(:do => {"$in" => [DOMAINS_HASH[:blog], DOMAINS_HASH[:my]]}), :t
-  [:www, :code, :skill, :book, :edu, :news, :wiki, :salon, :android].each do |site|
-    daily  EoeLog.where(:do => DOMAINS_HASH[site]), :t
+  hourly :time_column => :t
+  [EoeLog,
+   EoeLog.where(:ui => 0),
+   EoeLog.where(:ui => {"$ne" => 0}),
+   Mongoid[/eoe_logs_[0-9]+$/].where(:ui => {"$ne" => 0}),
+   EoeLog.where(:do => {"$in" => [DOMAINS_HASH[:blog], DOMAINS_HASH[:my]]}),
+  ].each do |s|
+    daily s, :time_column => :t
   end
 end
 ```
@@ -28,9 +25,9 @@ end
 ### access
 
 ```ruby
-Statlysis.daily # => daily configurations
+Statlysis.daily # => daily crons
 Statlysis.daily.run # => run daily
-Statlysis.daily[/name_regexp/] # => return matched daily configurations
+Statlysis.daily[/name_regexp/] # => return matched daily crons
 ```
 
 Features
