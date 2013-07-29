@@ -21,7 +21,9 @@ Gem::Specification.new do |s|
   s.add_dependency "rake"
   s.add_dependency "rails"
   s.add_dependency "mysql2"
+  if not ENV['RAILS4'] # current mongoid depend on activemodel (~> 3.1) 20130726
   s.add_dependency "mongoid", ">= 3.0.0"
+  end
   s.add_dependency "activerecord"
   s.add_dependency "activerecord_idnamecache"
   s.add_dependency "activesupport"
