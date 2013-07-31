@@ -7,10 +7,10 @@ class TestTimeSeries < Test::Unit::TestCase
 
   def setup
     super
-    @dt = DateTime.parse "20121221 +0800"
-    @dt1 = DateTime.parse "20111221 +0800"
-    @dt2 = DateTime.parse "20121221 +0800"
-    @old_datetime = DateTime.parse("20130105")
+    @dt = Time.zone.parse "20121221 +0800"
+    @dt1 = Time.zone.parse "20111221 +0800"
+    @dt2 = Time.zone.parse "20121221 +0800"
+    @old_datetime = Time.zone.parse("20130105")
   end
 
   def test_parse_datetime
@@ -18,7 +18,7 @@ class TestTimeSeries < Test::Unit::TestCase
   end
 
   def test_parse_special_datetime
-    assert_equal 1, TimeSeries.parse(DateTime.parse('2012122110')).length, "抽取单个时间没通过"
+    assert_equal 1, TimeSeries.parse(Time.zone.parse('2012122110')).length, "抽取单个时间没通过"
   end
 
   def test_parse_range_in_hour
@@ -37,8 +37,8 @@ class TestTimeSeries < Test::Unit::TestCase
   end
 
   def test_parse_range_in_201212_week
-    w1 = DateTime.parse "20121201 +0800"
-    w2 = DateTime.parse "20121231 +0800"
+    w1 = Time.zone.parse "20121201 +0800"
+    w2 = Time.zone.parse "20121231 +0800"
     assert_equal 6, TimeSeries.parse(w1..w2, :unit => :week).length, "2012十二月应该有六周"
   end
 

@@ -41,6 +41,7 @@ TODO
 3. Interacting with Javascript charting library, e.g. Highcharts, D3.
 5. More tests
 6. support collections which splited by date
+7. Add @criteria to MultipleDataset
 
 
 Statistical Process

@@ -45,7 +45,8 @@ module Statlysis
 
 
     def first_time
-      _resort_source_order.map(&:first).compact.map {|i| i.send(cron.time_column) }.compact.min || DateTime1970
+      t = _resort_source_order.map(&:first).compact.map {|i| i.send(cron.time_column) }.compact.min || DateTime1970
+      t.in_time_zone(cron.time_zone)
     end
     def _resort_source_order; resort_source_order if cron; end # lazy load if cron is unassigned
     def resort_source_order; raise DefaultNotImplementWrongMessage; end

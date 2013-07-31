@@ -4,8 +4,8 @@ module Statlysis
   module TimeSeries
     # range支持如下三种时间范围格式
     #   20121201 20121221
-    #   DateTime.parse('20121221')
-    #   DateTime.parse('20121201')..DateTime.parse('20121221')
+    #   Time.zone.parse('20121221')
+    #   Time.zone.parse('20121201')..Time.zone.parse('20121221')
     # opts[:unit]支持:hour, :day, :week, :month等时间单位
     # 返回的结果为时间范围内的序列数组
     def self.parse range, opts = {}
@@ -15,7 +15,7 @@ module Statlysis
       unit = opts[:unit]
       zone = opts[:zone] || Statlysis.default_time_zone || Time.zone
 
-      range = Range.new(*range.split.map {|i| DateTime.parse(i).in_time_zone(zone) }) if range.is_a?(String)
+      range = Range.new(*range.split.map {|i| Time.zone.parse(i).in_time_zone(zone) }) if range.is_a?(String)
 
       begin_unit = "beginning_of_#{unit}".to_sym
       array = if range.respond_to?(:to_datetime)

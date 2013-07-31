@@ -24,11 +24,12 @@ EoeLog.create
 # Setup a single log that combined by multiple collections
 {'07' => 1..31, '08' => 1..12}.map do |month, day_range|
   day_range.map do |day|
-    # define model dynamically
-    collection_class_name = "MultipleLog2013#{month}#{day.to_s.rjust(2, '0')}"
+    # define model dynamically, e.g. MultipleLog20130729
+    date_str = "2013#{month}#{day.to_s.rjust(2, '0')}"
+    collection_class_name = "MultipleLog#{date_str}"
     collection_name = collection_class_name.sub("MultipleLog", "multiple_log_")
 
-    # Object.const_set(name, Class.new {}) cause failed with error 16256: "Invalid ns [statlysis_mongoid_test.]",
+    # NOTE: Object.const_set(name, Class.new {}) cause failed with error 16256: "Invalid ns [statlysis_mongoid_test.]",
     # and cann't Mongoid.create data
     eval("
       class #{collection_class_name}
@@ -41,7 +42,12 @@ EoeLog.create
     ")
 
     collection_class = collection_class_name.constantize
-    collection_class.create
+    t = Time.zone.parse(date_str)
+    1.upto(day) do |i|
+      puts "#{month} #{day_range} #{day} #{i}"
+      collection_class.create :t => (t.to_time+rand(60*60*24-1)).to_datetime, :url => '/'
+    end
+
     collection_class.count
   end
 end

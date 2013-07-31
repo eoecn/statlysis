@@ -4,7 +4,7 @@ require 'helper'
 
 class TestStatlysis < Test::Unit::TestCase
   def setup
-    @old_datetime = DateTime.parse("20130105")
+    @old_datetime = Time.zone.parse("20130105")
   end
 
   def test_setup_count_stat_table

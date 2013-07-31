@@ -41,14 +41,15 @@ module Statlysis
         timely_c = 0
         totally_c = 0
         # support multiple data sources
+        _first_source = nil
         cron.multiple_dataset.sources.each do |s|
           timely_c  += s.where(unit_range_query(time)).count
           _t = DateTime1970
           _t = is_time_column_integer? ? _t.to_i : _t
           totally_c += s.where(unit_range_query(time, _t)).count
-
-          logger.info "#{time.in_time_zone} #{cron.multiple_dataset.name} timely_c:#{timely_c} totally_c:#{totally_c}"
+          _first_source ||= s.where(unit_range_query(time))
         end
+        logger.info "#{time.in_time_zone(cron.time_zone)} multiple_dataset:#{cron.multiple_dataset.name} _first_source:#{_first_source.inspect} timely_c:#{timely_c} totally_c:#{totally_c}" if ENV['DEBUG']
 
         if timely_c.zero? && totally_c.zero?
           nil

@@ -13,7 +13,7 @@ module Statlysis
 
       @time_column      = opts[:time_column]
       @time_unit        = opts[:time_unit]
-      @time_zone        = opts[:time_zone]
+      @time_zone        = opts[:time_zone] || Statlysis.default_time_zone || Time.zone || Time.now.utc_offset
 
       # insert source as a dataset
       @multiple_dataset = (s.is_a?(ActiveRecordDataset) ? s : ActiveRecordDataset.new(cron).add_source(s)) if @is_activerecord
