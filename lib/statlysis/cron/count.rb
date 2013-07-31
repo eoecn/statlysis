@@ -34,7 +34,7 @@ module Statlysis
     protected
     def unit_range_query time, time_begin = nil
       # time begin and end
-      tb = time # TODO 差八个小时 [.in_time_zone, .localtime, .utc] 对于Rails，计算结果还是一样的。
+      tb = time
       te = (time+1.send(cron.time_unit)-1.second)
       tb, te = tb.to_i, te.to_i if is_time_column_integer?
       tb = time_begin || tb

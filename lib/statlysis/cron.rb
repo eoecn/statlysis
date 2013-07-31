@@ -2,7 +2,7 @@
 
 module Statlysis
   class Cron
-    attr_reader :multiple_dataset, :time_column, :time_unit
+    attr_reader :multiple_dataset, :time_column, :time_unit, :time_zone
     include Common
 
     def initialize s, opts = {}
@@ -13,6 +13,7 @@ module Statlysis
 
       @time_column      = opts[:time_column]
       @time_unit        = opts[:time_unit]
+      @time_zone        = opts[:time_zone]
 
       # insert source as a dataset
       @multiple_dataset = (s.is_a?(ActiveRecordDataset) ? s : ActiveRecordDataset.new(cron).add_source(s)) if @is_activerecord
@@ -45,7 +46,7 @@ module Statlysis
     # or
     # specify TIME_RANGE and TIME_UNIT in shell to run
     def time_range
-      return TimeSeries.parse(ENV['TIME_RANGE'], :unit => (ENV['TIME_UNIT'] || 'day')) if ENV['TIME_RANGE']
+      return TimeSeries.parse(ENV['TIME_RANGE'], :unit => (ENV['TIME_UNIT'] || 'day'), :zone => cron.time_zone) if ENV['TIME_RANGE']
       # 选择开始时间。取出统计表的最后时间，和数据表的最先时间对比，哪个在后就选择哪个
       begin_day = DateTime.now.beginning_of_day
       st_timebegin = (a = cron.stat_model.order(:t).where("t >= ?", begin_day.yesterday).first) ? a[:t] : nil

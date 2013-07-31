@@ -9,7 +9,7 @@ module Statlysis
   class Configuration
     include Singleton
 
-    attr_accessor :sequel, :default_time_columns, :database_opts, :tablename_default_pre
+    attr_accessor :sequel, :default_time_columns, :default_time_zone, :database_opts, :tablename_default_pre
     attr_accessor :is_skip_database_index
     TimeUnits.each {|unit| module_eval "attr_accessor :#{unit}_crons; self.instance.#{unit}_crons = []" }
     [:realtime, :similar, :hotest].each do |sym|
@@ -40,6 +40,12 @@ module Statlysis
       ["#{self.tablename_default_pre}_single_kvs", "#{self.tablename_default_pre}_single_kv_histories"].each do |tn|
         Utils.setup_pattern_table_and_model tn
       end
+      return self
+    end
+
+    def set_default_time_zone zone
+      self.default_time_zone = zone
+      return self
     end
 
     def set_tablename_default_pre str

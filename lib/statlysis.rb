@@ -43,6 +43,7 @@ module Statlysis
     def config; Configuration.instance end
     require 'active_support/core_ext/module/delegation.rb'
     [:sequel, :set_database, :check_set_database,
+     :default_time_zone,
      :set_tablename_default_pre, :tablename_default_pre
     ].each do |sym|
       delegate sym, :to => :config
