@@ -51,6 +51,17 @@ module Statlysis
     def _resort_source_order; resort_source_order if cron; end # lazy load if cron is unassigned
     def resort_source_order; raise DefaultNotImplementWrongMessage; end
 
+    # select ORM models fron ::Object namespace
+    def _select_orm _module
+      ::Object.constants.map do |c|
+        c.to_s.constantize rescue nil # NameError: uninitialized constant ClassMethods
+      end.compact.select do |c|
+        (c.class === Class) &&
+        c.respond_to?(:included_modules) &&
+        c.included_modules.index(_module)
+      end
+    end
+
   end
 end
 

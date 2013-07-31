@@ -29,15 +29,8 @@ module Statlysis
       super
 
       _collections = Mongoid.default_session.collections.select {|_collection| _collection.name.match(@regexp) }
+      mongoid_models = _select_orm(Mongoid::Document)
 
-      # select Mongoid models fron ::Object namespace
-      mongoid_models = ::Object.constants.reject {|c| c == :Config }.map do |c|
-        c.to_s.constantize rescue nil # NameError: uninitialized constant ClassMethods
-      end.compact.select do |c|
-        (c.class === Class) &&
-        c.respond_to?(:included_modules) &&
-        c.included_modules.index(Mongoid::Document)
-      end
       _collections.select do |_collection|
         _mongoid_model = mongoid_models.detect {|m| m.collection_name === _collection.name }
         raise "Please define Mongoid model for #{_collection}.collection under ::Object namespace!" if _mongoid_model.nil?

@@ -7,7 +7,11 @@ module Statlysis
     def set_regexp regexp
       super
 
-      # TODO support multiple
+      # TODO test it
+      activerecord_models = _select_orm(ActiveRecord::Store)
+      activerecord_models.select do |_model|
+        @sources.add _model if _model.table_name.to_s.match(@regexp)
+      end
 
       _resort_source_order
 
