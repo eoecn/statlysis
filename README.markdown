@@ -25,8 +25,8 @@ end
 ### access
 
 ```ruby
-Statlysis.daily # => daily crons
-Statlysis.daily.run # => run daily
+Statlysis.daily # => return daily crons
+Statlysis.daily.run # => run daily crons
 Statlysis.daily[/name_regexp/] # => return matched daily crons
 ```
 
