@@ -4,6 +4,14 @@ require 'active_record'
 
 module Statlysis
   class ActiveRecordDataset < MultipleDataset
+    attr_reader :arel
+    def arel
+      @arel = @sources.first.where("").arel
+    end
+    # TODO
+    def method_missing
+    end
+
     def set_regexp regexp
       super
 
