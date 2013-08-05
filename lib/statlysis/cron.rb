@@ -2,23 +2,21 @@
 
 module Statlysis
   class Cron
-    attr_reader :multiple_dataset, :time_column, :time_unit, :time_zone
+    attr_reader :multiple_dataset, :source_type, :time_column, :time_unit, :time_zone
     include Common
 
     def initialize s, opts = {}
       # setup data type related
-      @is_activerecord = Utils.is_activerecord?(s)
-      @is_mongoid      = Utils.is_mongoid?(s)
-      @is_orm          = @is_activerecord || @is_mongoid
+      @source_type = {Utils.is_activerecord?(s) => :activerecord, Utils.is_mongoid?(s) => :mongoid}.detect {|k, v| k }[1]
 
       @time_column      = opts[:time_column]
       @time_unit        = opts[:time_unit]
       @time_zone        = opts[:time_zone] || Statlysis.default_time_zone || Time.zone || Time.now.utc_offset
 
       # insert source as a dataset
-      @multiple_dataset = (s.is_a?(ActiveRecordDataset) ? s : ActiveRecordDataset.new(cron).add_source(s)) if @is_activerecord
-      @multiple_dataset = (s.is_a?(MongoidDataset) ? s : MongoidDataset.new(cron).add_source(s)) if @is_mongoid
-      @multiple_dataset.instance_variable_set("@cron", cron) if @is_orm && @multiple_dataset.cron.nil?
+      @multiple_dataset = (s.is_a?(ActiveRecordDataset) ? s : ActiveRecordDataset.new(cron).add_source(s)) if is_activerecord?
+      @multiple_dataset = (s.is_a?(MongoidDataset) ? s : MongoidDataset.new(cron).add_source(s)) if is_mongoid?
+      @multiple_dataset.instance_variable_set("@cron", cron) if is_orm? && @multiple_dataset.cron.nil?
 
       @stat_table_name = opts[:stat_table_name] if opts[:stat_table_name]
 
@@ -28,6 +26,9 @@ module Statlysis
     def reoutput; @output = nil; output end
     def setup_stat_model; raise DefaultNotImplementWrongMessage end
     def run; raise  DefaultNotImplementWrongMessage end
+    def is_activerecord?; @source_type == :activerecord; end
+    def is_mongoid?; @source_type == :mongoid; end
+    def is_orm?; [:activerecord, :mongoid].include?(@source_type); end
 
     def _source
       cron.multiple_dataset.sources.first
@@ -37,8 +38,8 @@ module Statlysis
       a = _source.where("").where_values.map do |equality|
         # use full keyvalue index name
         equality.is_a?(String) ? equality.to_sym : "#{equality.operand1.name}#{equality.operand2}"
-      end if @is_activerecord
-      a = _source.all.selector.reject {|k, v| k == 't' } if @is_mongoid
+      end if is_activerecord?
+      a = _source.all.selector.reject {|k, v| k == 't' } if is_mongoid?
       a.map {|s1| s1.to_s.split(//).select {|s2| s2.match(/[a-z0-9]/i) }.join }.sort.map(&:to_sym)
     end
 
@@ -67,7 +68,7 @@ module Statlysis
 
     # 兼容采用整数类型作时间字段
     def is_time_column_integer?
-      if @is_activerecord
+      if is_activerecord?
         _source.columns_hash[cron.time_column.to_s].type == :integer
       else
         false

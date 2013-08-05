@@ -38,8 +38,8 @@ module Statlysis
       te = (time+1.send(cron.time_unit)-1.second)
       tb, te = tb.to_i, te.to_i if is_time_column_integer?
       tb = time_begin || tb
-      return ["#{cron.time_column} >= ? AND #{cron.time_column} < ?", tb, te] if @is_activerecord
-      return {cron.time_column => {"$gte" => tb.utc, "$lt" => te.utc}} if @is_mongoid # .utc  [fix undefined method `__bson_dump__' for Sun, 16 Dec 2012 16:00:00 +0000:DateTime]
+      return ["#{cron.time_column} >= ? AND #{cron.time_column} < ?", tb, te] if is_activerecord?
+      return {cron.time_column => {"$gte" => tb.utc, "$lt" => te.utc}} if is_mongoid? # .utc  [fix undefined method `__bson_dump__' for Sun, 16 Dec 2012 16:00:00 +0000:DateTime]
     end
 
   end

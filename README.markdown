@@ -30,17 +30,23 @@ Statlysis.daily.run # => run daily crons
 Statlysis.daily[/name_regexp/] # => return matched daily crons
 ```
 
+### process
+
+```irb
+[23] pry(#<Statlysis::Configuration>)> Statlysis.daily['multi'].first
+```
+
 Features
 -----------------------------------------------
 * Support time column that stored as integer.
 
 TODO
 -----------------------------------------------
-1. Admin interface
-2. statistical query api in Ruby and HTTP
-3. Interacting with Javascript charting library, e.g. Highcharts, D3.
-5. More tests
-6. Add @criteria to MultipleDataset
+* Admin interface
+* statistical query api in Ruby and HTTP
+* Interacting with Javascript charting library, e.g. Highcharts, D3.
+* More tests
+* Add @criteria to MultipleDataset
 
 
 Statistical Process
