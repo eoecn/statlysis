@@ -85,9 +85,9 @@ Related
 ### Articles
 * http://www.slideshare.net/WombatNation/logging-app-behavior-to-mongo-db
 
-### event collector
+### Event collector
 * https://github.com/fluent
 * https://github.com/logstash/logstash
 
-### admin interface
+### Admin interface
 * http://three.kibana.org/ browser based analytics and search interface to Logstash and other timestamped data sets stored in ElasticSearch.

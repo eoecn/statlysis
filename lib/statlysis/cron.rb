@@ -7,7 +7,7 @@ module Statlysis
 
     def initialize s, opts = {}
       # setup data type related
-      @source_type = {Utils.is_activerecord?(s) => :activerecord, Utils.is_mongoid?(s) => :mongoid}.detect {|k, v| k }[1]
+      @source_type = ({Utils.is_activerecord?(s) => :activerecord, Utils.is_mongoid?(s) => :mongoid}.detect {|k, v| k } || {})[1] || :unknown
 
       @time_column      = opts[:time_column]
       @time_unit        = opts[:time_unit]
