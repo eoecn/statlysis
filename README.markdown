@@ -10,11 +10,13 @@ Usage
 Statlysis.setup do
   set_database :statlysis
 
-  hourly :time_column => :t
+  daily CodeGist
+  hourly EoeLog, :time_column => :t # support custom time_column
+
   [EoeLog,
-   EoeLog.where(:ui => 0),
+   EoeLog.where(:ui => 0), # support query scope
    EoeLog.where(:ui => {"$ne" => 0}),
-   Mongoid[/eoe_logs_[0-9]+$/].where(:ui => {"$ne" => 0}),
+   Mongoid[/eoe_logs_[0-9]+$/].where(:ui => {"$ne" => 0}), # support collection name regexp
    EoeLog.where(:do => {"$in" => [DOMAINS_HASH[:blog], DOMAINS_HASH[:my]]}),
   ].each do |s|
     daily s, :time_column => :t
