@@ -47,8 +47,6 @@ TODO
 * Admin interface
 * statistical query api in Ruby and HTTP
 * Interacting with Javascript charting library, e.g. Highcharts, D3.
-* More tests
-* Add @criteria to MultipleDataset
 
 
 Statistical Process
@@ -93,3 +91,11 @@ Related
 
 ### Admin interface
 * http://three.kibana.org/ browser based analytics and search interface to Logstash and other timestamped data sets stored in ElasticSearch.
+
+
+### ETL
+* https://github.com/activewarehouse/activewarehouse-etl/ 
+* http://jisraelsen.github.io/drudgery/ ruby ETL DSL, support csv, sqlite3, ActiveRecord, without support time range
+* https://github.com/square/ETL Simply encapsulates the SQL procedures
+
+

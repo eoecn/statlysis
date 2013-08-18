@@ -29,10 +29,8 @@ module Statlysis
     def is_activerecord?; @source_type == :activerecord; end
     def is_mongoid?; @source_type == :mongoid; end
     def is_orm?; [:activerecord, :mongoid].include?(@source_type); end
+    def _source; cron.multiple_dataset.sources.first end
 
-    def _source
-      cron.multiple_dataset.sources.first
-    end
     def source_where_array
       # TODO follow index seq
       a = _source.where("").where_values.map do |equality|
